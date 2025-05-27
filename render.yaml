@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: kai-shop
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: PORT
+        value: 10000
+    disk:
+      name: kai-shop-data
+      mountPath: /opt/render/project/src/data
+      sizeGB: 1
