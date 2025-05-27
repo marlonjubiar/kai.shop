@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kai.shop - Login & Sign Up</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        border: "hsl(214.3 31.8% 91.4%)",
+                        input: "hsl(214.3 31.8% 91.4%)",
+                        ring: "hsl(222.2 84% 4.9%)",
+                        background: "hsl(0 0% 100%)",
+                        foreground: "hsl(222.2 84% 4.9%)",
+                        primary: {
+                            DEFAULT: "hsl(222.2 84% 4.9%)",
+                            foreground: "hsl(210 40% 98%)",
+                        },
+                        secondary: {
+                            DEFAULT: "hsl(210 40% 96%)",
+                            foreground: "hsl(222.2 84% 4.9%)",
+                        },
+                        muted: {
+                            DEFAULT: "hsl(210 40% 96%)",
+                            foreground: "hsl(215.4 16.3% 46.9%)",
+                        },
+                        accent: {
+                            DEFAULT: "hsl(210 40% 96%)",
+                            foreground: "hsl(222.2 84% 4.9%)",
+                        },
+                        card: {
+                            DEFAULT: "hsl(0 0% 100%)",
+                            foreground: "hsl(222.2 84% 4.9%)",
+                        },
+                        destructive: {
+                            DEFAULT: "hsl(0 84.2% 60.2%)",
+                            foreground: "hsl(210 40% 98%)",
+                        },
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out',
+                        'slide-in': 'slideIn 0.3s ease-out',
+                        'bounce-gentle': 'bounceGentle 0.6s ease-out',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideIn: {
+                            '0%': { transform: 'translateY(10px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        bounceGentle: {
+                            '0%, 20%, 53%, 80%, 100%': { transform: 'translate3d(0,0,0)' },
+                            '40%, 43%': { transform: 'translate3d(0, -8px, 0)' },
+                            '70%': { transform: 'translate3d(0, -4px, 0)' },
+                            '90%': { transform: 'translate3d(0, -2px, 0)' },
+                        },
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-secondary/30 min-h-screen flex items-center justify-center p-4">
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="fixed top-4 right-4 z-50 space-y-2"></div>
+
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 opacity-5">
+        <div class="absolute inset-0 bg-repeat bg-center" style="background-image: url('data:image/svg+xml,%3Csvg width="20" height="20" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="%23000" fill-opacity="0.4"%3E%3Ccircle cx="10" cy="10" r="1"/%3E%3C/g%3E%3C/svg%3E');"></div>
+    </div>
+
+    <div class="relative w-full max-w-4xl">
+        <!-- Header -->
+        <div class="text-center mb-8 animate-fade-in">
+            <div class="flex items-center justify-center mb-4">
+                <div class="flex items-center justify-center w-16 h-16 bg-primary text-primary-foreground rounded-2xl shadow-lg">
+                    <i data-lucide="store" class="w-8 h-8"></i>
+                </div>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-2">kai.shop</h1>
+            <p class="text-muted-foreground text-lg">Premium Gaming Items Store</p>
+        </div>
+
+        <!-- Auth Forms Container -->
+        <div class="bg-card border border-border rounded-2xl shadow-2xl overflow-hidden animate-slide-in">
+            <div class="grid grid-cols-1 lg:grid-cols-2">
+                <!-- Left Side - Login -->
+                <div id="login-section" class="p-8 lg:p-12 transition-all duration-300">
+                    <div class="max-w-sm mx-auto">
+                        <div class="text-center mb-8">
+                            <div class="inline-flex items-center justify-center w-12 h-12 bg-primary/10 text-primary rounded-full mb-4">
+                                <i data-lucide="log-in" class="w-6 h-6"></i>
+                            </div>
+                            <h2 class="text-2xl font-bold mb-2">Welcome Back</h2>
+                            <p class="text-muted-foreground">Sign in to your account</p>
+                        </div>
+
+                        <form id="login-form" class="space-y-6">
+                            <div class="space-y-2">
+                                <label class="text-sm font-medium" for="login-username">Username</label>
+                                <div class="relative">
+                                    <i data-lucide="user" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground"></i>
+                                    <input 
+                                        type="text" 
+                                        id="login-username" 
+                                        class="w-full pl-10 pr-4 py-3 border border-border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-all"
+                                        placeholder="Enter your username"
+                                        required
+                                    >
+                                </div>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="text-sm font-medium" for="login-password">Password</label>
+                                <div class="relative">
+                                    <i data-lucide="lock" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground"></i>
+                                    <input 
+                                        type="password" 
+                                        id="login-password" 
+                                        class="w-full pl-10 pr-12 py-3 border border-border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-all"
+                                        placeholder="Enter your password"
+                                        required
+                                    >
+                                    <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors" onclick="togglePassword('login-password')">
+                                        <i data-lucide="eye" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <button 
+                                type="submit" 
+                                class="w-full bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-3 rounded-lg font-medium transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2"
+                                id="login-btn"
+                            >
+                                <i data-lucide="log-in" class="w-4 h-4"></i>
+                                <span>Sign In</span>
+                            </button>
+                        </form>
+
+                        <div class="mt-6 text-center">
+                            <p class="text-muted-foreground text-sm">
+                                Don't have an account? 
+                                <button onclick="switchToSignup()" class="text-primary hover:underline font-medium">
+                                    Sign up here
+                                </button>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Side - Sign Up -->
+                <div id="signup-section" class="p-8 lg:p-12 bg-secondary/50 transition-all duration-300">
+                    <div class="max-w-sm mx-auto">
+                        <div class="text-center mb-8">
+                            <div class="inline-flex items-center justify-center w-12 h-12 bg-primary/10 text-primary rounded-full mb-4">
+                                <i data-lucide="user-plus" class="w-6 h-6"></i>
+                            </div>
+                            <h2 class="text-2xl font-bold mb-2">Create Account</h2>
+                            <p class="text-muted-foreground">Join our gaming community</p>
+                        </div>
+
+                        <form id="signup-form" class="space-y-6">
+                            <div class="space-y-2">
+                                <label class="text-sm font-medium" for="signup-username">Username</label>
+                                <div class="relative">
+                                    <i data-lucide="user" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground"></i>
+                                    <input 
+                                        type="text" 
+                                        id="signup-username" 
+                                        class="w-full pl-10 pr-4 py-3 border border-border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-all"
+                                        placeholder="Choose a username"
+                                        minlength="3"
+                                        required
+                                    >
+                                </div>
+                                <p class="text-xs text-muted-foreground">At least 3 characters</p>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="text-sm font-medium" for="signup-password">Password</label>
+                                <div class="relative">
+                                    <i data-lucide="lock" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground"></i>
+                                    <input 
+                                        type="password" 
+                                        id="signup-password" 
+                                        class="w-full pl-10 pr-12 py-3 border border-border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-all"
+                                        placeholder="Create a password"
+                                        minlength="6"
+                                        required
+                                    >
+                                    <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors" onclick="togglePassword('signup-password')">
+                                        <i data-lucide="eye" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                                <p class="text-xs text-muted-foreground">At least 6 characters</p>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="text-sm font-medium" for="confirm-password">Confirm Password</label>
+                                <div class="relative">
+                                    <i data-lucide="lock" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground"></i>
+                                    <input 
+                                        type="password" 
+                                        id="confirm-password" 
+                                        class="w-full pl-10 pr-12 py-3 border border-border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-all"
+                                        placeholder="Confirm your password"
+                                        required
+                                    >
+                                    <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors" onclick="togglePassword('confirm-password')">
+                                        <i data-lucide="eye" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start space-x-2">
+                                <input type="checkbox" id="agree-terms" class="mt-1 rounded border-border" required>
+                                <label for="agree-terms" class="text-xs text-muted-foreground">
+                                    I agree to the <a href="#" class="text-primary hover:underline">Terms of Service</a> and <a href="#" class="text-primary hover:underline">Privacy Policy</a>
+                                </label>
+                            </div>
+
+                            <button 
+                                type="submit" 
+                                class="w-full bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-3 rounded-lg font-medium transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2"
+                                id="signup-btn"
+                            >
+                                <i data-lucide="user-plus" class="w-4 h-4"></i>
+                                <span>Create Account</span>
+                            </button>
+                        </form>
+
+                        <div class="mt-6 text-center">
+                            <p class="text-muted-foreground text-sm">
+                                Already have an account? 
+                                <button onclick="switchToLogin()" class="text-primary hover:underline font-medium">
+                                    Sign in here
+                                </button>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 animate-fade-in">
+            <div class="text-center p-6 bg-card border border-border rounded-xl">
+                <div class="inline-flex items-center justify-center w-12 h-12 bg-green-100 text-green-600 rounded-full mb-4">
+                    <i data-lucide="zap" class="w-6 h-6"></i>
+                </div>
+                <h3 class="font-semibold mb-2">Instant Delivery</h3>
+                <p class="text-sm text-muted-foreground">Get your items delivered instantly after purchase</p>
+            </div>
+            <div class="text-center p-6 bg-card border border-border rounded-xl">
+                <div class="inline-flex items-center justify-center w-12 h-12 bg-blue-100 text-blue-600 rounded-full mb-4">
+                    <i data-lucide="shield-check" class="w-6 h-6"></i>
+                </div>
+                <h3 class="font-semibold mb-2">Secure & Safe</h3>
+                <p class="text-sm text-muted-foreground">Your account and transactions are always protected</p>
+            </div>
+            <div class="text-center p-6 bg-card border border-border rounded-xl">
+                <div class="inline-flex items-center justify-center w-12 h-12 bg-purple-100 text-purple-600 rounded-full mb-4">
+                    <i data-lucide="headphones" class="w-6 h-6"></i>
+                </div>
+                <h3 class="font-semibold mb-2">24/7 Support</h3>
+                <p class="text-sm text-muted-foreground">Our team is always ready to help you</p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center mt-8 text-muted-foreground text-sm">
+            <p>&copy; 2025 kai.shop. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Toast notifications
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            const colors = {
+                success: 'bg-green-500 text-white',
+                error: 'bg-red-500 text-white',
+                info: 'bg-blue-500 text-white',
+                warning: 'bg-yellow-500 text-yellow-900'
+            };
+            
+            const icons = {
+                success: 'check-circle',
+                error: 'x-circle',
+                info: 'info',
+                warning: 'alert-triangle'
+            };
+            
+            toast.className = `${colors[type]} px-6 py-3 rounded-lg shadow-lg flex items-center space-x-2 transform translate-x-full transition-transform duration-300`;
+            toast.innerHTML = `
+                <i data-lucide="${icons[type]}" class="w-5 h-5"></i>
+                <span>${message}</span>
+            `;
+            
+            container.appendChild(toast);
+            lucide.createIcons();
+            
+            // Show toast
+            setTimeout(() => {
+                toast.classList.remove('translate-x-full');
+            }, 100);
+            
+            // Hide toast
+            setTimeout(() => {
+                toast.classList.add('translate-x-full');
+                setTimeout(() => {
+                    if (container.contains(toast)) {
+                        container.removeChild(toast);
+                    }
+                }, 300);
+            }, 5000);
+        }
+
+        // Password toggle
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const icon = input.nextElementSibling.querySelector('i');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.setAttribute('data-lucide', 'eye-off');
+            } else {
+                input.type = 'password';
+                icon.setAttribute('data-lucide', 'eye');
+            }
+            lucide.createIcons();
+        }
+
+        // Switch between forms
+        function switchToLogin() {
+            document.getElementById('login-section').classList.remove('opacity-50');
+            document.getElementById('signup-section').classList.add('opacity-50');
+        }
+
+        function switchToSignup() {
+            document.getElementById('signup-section').classList.remove('opacity-50');
+            document.getElementById('login-section').classList.add('opacity-50');
+        }
+
+        // Form submissions
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            const btn = document.getElementById('login-btn');
+            
+            if (!username || !password) {
+                showToast('Please fill in all fields', 'error');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>Signing in...</span>';
+            lucide.createIcons();
+            
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    localStorage.setItem('authToken', data.token);
+                    showToast('Welcome back!', 'success');
+                    
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 1000);
+                } else {
+                    showToast(data.error || 'Login failed', 'error');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showToast('Network error. Please try again.', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i data-lucide="log-in" class="w-4 h-4"></i><span>Sign In</span>';
+                lucide.createIcons();
+            }
+        });
+
+        document.getElementById('signup-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('signup-username').value;
+            const password = document.getElementById('signup-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const agreeTerms = document.getElementById('agree-terms').checked;
+            const btn = document.getElementById('signup-btn');
+            
+            if (!username || !password || !confirmPassword) {
+                showToast('Please fill in all fields', 'error');
+                return;
+            }
+
+            if (username.length < 3) {
+                showToast('Username must be at least 3 characters', 'error');
+                return;
+            }
+
+            if (password.length < 6) {
+                showToast('Password must be at least 6 characters', 'error');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showToast('Passwords do not match', 'error');
+                return;
+            }
+
+            if (!agreeTerms) {
+                showToast('Please agree to the terms and conditions', 'error');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>Creating account...</span>';
+            lucide.createIcons();
+            
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    localStorage.setItem('authToken', data.token);
+                    showToast('Account created successfully!', 'success');
+                    
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 1000);
+                } else {
+                    showToast(data.error || 'Registration failed', 'error');
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                showToast('Network error. Please try again.', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i data-lucide="user-plus" class="w-4 h-4"></i><span>Create Account</span>';
+                lucide.createIcons();
+            }
+        });
+
+        // Check if user is already logged in
+        if (localStorage.getItem('authToken')) {
+            window.location.href = '/';
+        }
+
+        // Real-time validation
+        document.getElementById('signup-username').addEventListener('input', function() {
+            const username = this.value;
+            if (username.length > 0 && username.length < 3) {
+                this.classList.add('border-red-300');
+                this.classList.remove('border-border');
+            } else {
+                this.classList.remove('border-red-300');
+                this.classList.add('border-border');
+            }
+        });
+
+        document.getElementById('signup-password').addEventListener('input', function() {
+            const password = this.value;
+            if (password.length > 0 && password.length < 6) {
+                this.classList.add('border-red-300');
+                this.classList.remove('border-border');
+            } else {
+                this.classList.remove('border-red-300');
+                this.classList.add('border-border');
+            }
+        });
+
+        document.getElementById('confirm-password').addEventListener('input', function() {
+            const password = document.getElementById('signup-password').value;
+            const confirmPassword = this.value;
+            if (confirmPassword.length > 0 && password !== confirmPassword) {
+                this.classList.add('border-red-300');
+                this.classList.remove('border-border');
+            } else {
+                this.classList.remove('border-red-300');
+                this.classList.add('border-border');
+            }
+        });
+    </script>
+</body>
+</html>
